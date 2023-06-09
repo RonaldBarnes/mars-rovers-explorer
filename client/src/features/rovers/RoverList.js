@@ -1,49 +1,46 @@
-import useRoverContext from "./useRoverContext";
-import { useState } from "react";
-import RoverListItem from "./RoverListItem";
+import { useContext } from "react";
+import { Link, useParams, Outlet } from "react-router-dom";
+
+import RoverCard from "./RoverCard";
+
+// Supply a list of all rovers and the associated data, fetched once in App.js:
+import { RoverContext } from "../../app/App";
 
 import "./RoverList.css";
 
-export default function RoverList() {
-  const rovers = useRoverContext();
+// Set title bar - nice for looking at history:
+document.title = "Mars Rovers: All Rovers";
 
-  const handleClick = (e) => {
-    // investigate CameraButton 'wiring' to RoverList
-    if (e.target.attributes.class.value === "RoverCard") {
-      const roverId = e.target.attributes.roverid.value;
-      setLocalRovers((prevLocalRovers) => prevLocalRovers.map((r) => {
-        if (r.id.toString() === roverId) return { ...r };
-        if (r.style.display === "block") {
-          return { ...r, style: { display: "none" } };
-        } else {
-          return { ...r, style: { display: "block" } };
-        }
-      }));
-    }
-  };
 
-  const [localRovers, setLocalRovers] =
-    useState(rovers.map((r) => ({
-      ...r,
-      onClick: handleClick,
-      style: { display: "block" }
-    })
-  ));
+export default function RoverList()
+	{
+	// Asynchronous fetch results of all rovers, only updates when App.js re-renders:
+	const {loading, error, rovers} = useContext(RoverContext);
 
-  const displayRovers = () => {
-    return localRovers.map((r) => (
-      <RoverListItem
-        {...r}
-        key={r.id}
-        onClick={r.onClick}
-        style={r.style}
-      />
-    ));
-  };
 
-  return (
-    <div id="RoverList">
-      { displayRovers() }
-    </div>
-  );
-};
+	// If no rover data (i.e. loading), or if error fetching data:
+	if (loading === true)
+		return (<div className="loading">Loading...</div>);
+	else if (error !== undefined)
+		{
+		console.log(`%cRoverList.js ERROR:`, "color:red");
+		console.table(error);
+		return (<div className="loading" style={{color:"red"}}>{error.message}</div>);
+		}
+
+
+	return (
+		<div id="RoverList">
+			{ rovers.map( (rover,idx) => (
+				<Link to={`/rovers/${rover.name.toLowerCase()}`} className="RoverCard" key={idx}>
+					<RoverCard rover={rover}
+						key={idx}
+						show_buttons={false}
+						/>
+				</Link>
+				))
+			}
+			<Outlet />
+		</div>
+		);	// end return
+	};	// end RoverList

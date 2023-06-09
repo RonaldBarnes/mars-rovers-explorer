@@ -1,35 +1,84 @@
 div.RoverCard:hover {
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 1);
-  transform: scale(1.05, 1.05);
+	box-shadow: 0px 2px 8px rgba(0, 0, 0, 1);
+	transform: scale(1.05, 1.05);
 }
 
 div.RoverCard {
-  background: rgb(240, 234, 214);
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 1);
-  box-sizing: border-box;
-  height: 430px;
-  margin-bottom: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 20px;
-  padding-bottom: 2.5px;
-  padding-left: 2.5px;
-  padding-right: 2.5px;
-  padding-top: 2.5px;
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0, 1);
-  width: 300px;
+	background: rgb(240, 234, 214);
+	box-shadow: 0px 2px 8px rgba(0, 0, 0, 1);
+	box-sizing: border-box;
+	/*
+	 * Change height from 430px to fit-content (default?), as (on my display),
+	 * there is very little padding at bottom:
+	height: 430px;
+	 */
+	height: fit-content;
+	/* Modified for <Link ...>: hover re-sizing looked weird with margins: */
+	/* margin-top: 20px;
+	margin-bottom: 20px; */
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-bottom: 2.5px;
+	padding-left: 2.5px;
+	padding-right: 2.5px;
+	padding-top: 2.5px;
+	text-align: center;
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0, 1);
+	width: 300px;
+	/* Make entire card have pointy finger cursor indicating clickable: */
+	cursor: pointer;
+	margin-inline: auto;
 }
 
 h1.RoverCard {
-  text-align: center;
+	text-align: center;
 }
 
 img.RoverCard {
-  height: 250px;
-  width: 250px;
+	height: 250px;
+	width: 250px;
 }
 
 p.RoverCard {
-  font-size: small;
+	font-size: small;
 }
+
+/*
+ * Testing: place RoverCard and CameraButtonsList in flex container.
+ * Should leave more space for photos below...
+ */
+/* .rover_and_buttons
+	{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	height: 50dvh;
+	overflow-y: hidden;
+	align-items: center;
+	} */
+.rover_and_buttons
+	{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	place-content: space-evenly;
+	place-items: center;
+	height: 50dvh;
+	/* Match NavBar: */
+	margin: 0px 25px 25px 25px;
+	/* overflow-y: hidden; */
+	}
+/* .rover_and_buttons .a
+	{
+	display: inline-block
+	} */
+.scroll_able, .CameraButtonList
+	{
+	/* height: 50dvh; */
+	overflow-y: scroll;
+	}
+
+/* Remove pointer when not in list: */
+/* .RoverCard :not(.RoverList)
+	{
+	cursor: initial;
+	} */
