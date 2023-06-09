@@ -1,4 +1,56 @@
+/*
+ * The CameraButtonList class is used in a className="..." but not declared.
+ * Until now:
+ */
+.CameraButtonList
+	{
+	/*
+	 * Widest button changes to "Hide Photos" and buttons re-size!
+	 * See Opportunity -> Miniature Thermal Emission Spectrometer (Mini-TES)
+	 */
+	/* width: max-content; */
+	width: 75%;
+	/*
+	 * Override the margin-inline (left & right) on buttons with auto to centre:
+	 */
+	margin-inline: auto;
+	height: fit-content;
+	height: 100%;
+	outline: 1px solid red;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	justify-content: space-between;
+	overflow-y: scroll;
+	}
+
 button.CameraButton:hover {
-  background-color: #ed8f45;
-  box-shadow: 2px 2px 5px #ed8f45;
+	/* Slightly changed colour to differentiate hover from "active": */
+	background-color: #aa8f45;
+	box-shadow: 2px 2px 5px #aa8f45;
 }
+
+button.CameraButton
+	{
+	/* Expand all camera selector buttons to same, full width: */
+	width: 100%;
+	/* Override declaration on all buttons: we want them lined up inside container: */
+	margin-block: 10px;
+	margin-inline: 0px;
+	display: block;
+	}
+button.CameraButton a, button.CameraButton a:hover
+	{
+	/* Override declaration on all buttons: we want them lined up inside container: */
+	margin: 0px;
+	}
+/* Remove the hovering background highlight: */
+.CameraButtonList > a:hover
+	{
+	background-color: revert;
+	}
+
+button.CameraButton.selected
+	{
+	background-color: #ed8f45;
+	}
