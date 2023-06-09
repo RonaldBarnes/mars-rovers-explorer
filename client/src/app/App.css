@@ -1,3 +1,7 @@
+/* *
+  {
+  outline: 1px solid lightgreen;
+  } */
 a {
   outline: none;
   text-decoration: none;
@@ -43,3 +47,15 @@ h2,
 h3 {
   letter-spacing: 1px;
 }
+
+
+.loading
+	{
+	display: block;
+	width: fit-content;
+	margin-inline: auto;
+	margin-block: 1rem;
+	font-size: 2rem;
+	color: white;
+	}
+
