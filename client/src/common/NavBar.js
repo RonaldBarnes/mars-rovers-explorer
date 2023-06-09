@@ -6,7 +6,7 @@ export default function NavBar() {
   return (
     <header>
       <nav>
-        <NavLink to="/">About</NavLink>
+        <NavLink to="/about">About</NavLink>
         <NavLink to="/rovers">Rovers</NavLink>
         <NavLink to="/photos">Photos</NavLink>
       </nav>
