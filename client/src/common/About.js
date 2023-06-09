@@ -1,5 +1,8 @@
 import "./About.css";
 
+// Set title bar - nice for looking at history:
+document.title = "Mars Rovers: About";
+
 export default function About() {
   return (
     <div id="about">
