@@ -59,12 +59,14 @@ p.RoverCard {
 .rover_and_buttons
 	{
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 2fr;
 	place-content: space-evenly;
 	place-items: center;
+	column-gap: 1rem;
 	height: 50dvh;
 	/* Match NavBar: */
-	margin: 0px 25px 25px 25px;
+	margin: 1rem 25px 2rem 25px;
+	padding-top: 1rem;
 	/* overflow-y: hidden; */
 	}
 /* .rover_and_buttons .a
@@ -82,3 +84,10 @@ p.RoverCard {
 	{
 	cursor: initial;
 	} */
+
+/* Responsive design requires this: */
+a.RoverCard
+	{
+	width: fit-content;
+	margin-inline: auto;
+	}
