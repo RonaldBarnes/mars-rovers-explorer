@@ -29,6 +29,8 @@ export default function App() {
 			r.profile_pic=`${MARS_DATA_URL}/explore/images/${r.name}_rover.jpg`
 			return r;
 			})
+// Also: there's a manifest for each rover at (but the info is redundant):
+// https://mars-photos.herokuapp.com/api/v1/manifests/curiosity
 		}
 
 	return (
