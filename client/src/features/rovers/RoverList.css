@@ -4,7 +4,43 @@ div#RoverList {
 	/*
 	 * On my version, RoverCards touch, but not on original version.
 	 * This is changed to guarantees spacing:
-  justify-content: center;
+	justify-content: center;
 	 */
   justify-content: space-evenly;
 }
+/* Handle wrapping evenly - responsive design: */
+div#RoverList {
+	display: grid;
+	grid-template-columns: repeat(4,1fr);
+	justify-content: space-evenly;
+	column-gap: 1rem;
+	/* Match NavBar: */
+	margin-inline: 25px;
+	margin-bottom: 2rem;
+}
+
+@media (max-width: 1250px)
+	{
+	/* Handle wrapping evenly - responsive design: */
+	div#RoverList {
+		display: grid;
+		grid-template-columns: repeat(2,1fr);
+		gap: 1rem;
+		/* Match NavBar: */
+		margin-inline: 25px;
+		justify-content: space-evenly;
+	}
+	}
+
+@media (max-width: 750px)
+	{
+	/* Handle wrapping evenly - responsive design: */
+	div#RoverList {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		/* Match NavBar: */
+		margin-inline: 25px;
+		justify-content: space-evenly;
+	}
+	}
