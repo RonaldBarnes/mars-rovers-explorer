@@ -20,13 +20,11 @@ export default function PhotoList({
 	{
 	// const photos = usePhotoContext();
 console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
-
 	const [page, setPage] = useState(1);
 	const [earthDate, setEarthDate] = useState(rover.max_date);
 	const [photos, setPhotos] = useState([]);
-	const [dateButtonDisabled, setDatebuttonDisabled] = useState(false);
-	const [pageButtonDisabled, setPageButtonDisabled] = useState(false);
-
+	const [dateButtonDisabled, setDatebuttonDisabled] = useState(true);
+	const [pageButtonDisabled, setPageButtonDisabled] = useState(true);
 
 
 	// One function to increment or decrement earthDate by one day:
@@ -63,14 +61,25 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 	// !mm is expected to be month NUMBER and will be converted to INDEX!
 	const yyyymmddToUtcDate = (yyyy_mm_dd) => {
 		let dateParts = yyyy_mm_dd.split("-");
-		// let tmpDate = Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])
+
 		// Convert date to UTC: Date() uses LOCAL TIME for params by default:
-		let tmpDate = new Date(yyyy_mm_dd);
+		let tmpDate = new Date();
 		tmpDate.setUTCFullYear( dateParts[0]);
 		tmpDate.setUTCMonth( dateParts[1] - 1);	// -1 because index vs number
 		tmpDate.setUTCDate( dateParts[2]);			// d can be +1 or -1
 
 		return tmpDate;
+		}
+
+
+	// Change page number and disable button so page never equals zero:
+	const incrementPage = (p) =>
+		{
+		if (page + p === 1)
+			setPageButtonDisabled(c => true);
+		else
+			setPageButtonDisabled(c => false);
+		setPage( c => c + p);
 		}
 
 
@@ -124,8 +133,7 @@ if (error !== undefined)
 	console.log(`error: ${error}`)
 	console.table(error?.message);
 	}
-// console.log(`value?.photos:`)
-// console.table(value?.photos);
+
 console.log(`photos.length: ${photos.length}`)
 console.table(photos);
 console.table(photos?.camera);
@@ -169,18 +177,19 @@ console.table(photos?.camera);
 
 				<form id="page" style={{width:"fit-content", display:"inline-block"}}>
 					<fieldset>
-						<legend>Page</legend>
+						<legend>Page {page}</legend>
 						<button
 							type="button"
 							value={page}
-							onClick={() => setPage( p => ( p > 1 ? p - 1 : p) )}
+							disabled={pageButtonDisabled}
+							onClick={() => incrementPage(-1)}
 							>
 							Previous Page
 						</button>
 						<button
 							type="button"
 							value={page}
-							onClick={() => setPage( p => p + 1)}
+							onClick={() => incrementPage(+1)}
 							>
 							Next Page
 						</button>
