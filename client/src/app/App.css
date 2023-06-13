@@ -1,22 +1,44 @@
 /* *
-  {
-  outline: 1px solid lightgreen;
-  } */
+	{
+	outline: 1px solid lightgreen;
+	} */
+html, body
+	{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	box-sizing: border-box;
+	}
+
+body {
+	background-color: #212426;
+	/* Full screen height, NO scroll bar (unless overflow): */
+	/* position:absolute;
+	top:0;
+	bottom:0;
+	right:0;
+	left:0;
+	height: auto; */
+	display: grid;
+	grid-template-rows: 1fr;
+	}
+
+
 a {
-  outline: none;
-  text-decoration: none;
+	outline: none;
+	text-decoration: none;
 }
 
 a:link {
-  color: black;
+	color: black;
 }
 
 a:active,
 a:focus,
 a:hover,
 a:visited {
-  color: black;
-  background: rgb(240, 234, 214);
+	color: black;
+	background: rgb(240, 234, 214);
 }
 
 a,
@@ -24,28 +46,24 @@ button,
 div,
 img,
 input {
-  border-radius: 10px;
-}
-
-body {
-  background-color: #212426;
+	border-radius: 10px;
 }
 
 button {
-  margin-bottom: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
 }
 
 h1,
 h2,
 h3 {
-  letter-spacing: 1px;
+	letter-spacing: 1px;
 }
 
 
