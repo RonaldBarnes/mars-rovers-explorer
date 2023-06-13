@@ -13,7 +13,7 @@ export default function MyRoutes() {
 		<>
 			<NavBar />
 			<Routes>
-				<Route exact path="/" element={<About />} />
+				<Route exact path="/" element={<RoverList />} />
 				<Route exact path="/rovers" element={<RoverList />} />
 				<Route
 					path="/rovers/:rover_name/:camera_id?"
