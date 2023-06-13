@@ -24,7 +24,8 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 	const [earthDate, setEarthDate] = useState(rover.max_date);
 	const [photos, setPhotos] = useState([]);
 	const [dateButtonDisabled, setDatebuttonDisabled] = useState(true);
-	const [pageButtonDisabled, setPageButtonDisabled] = useState(true);
+	const [pagePrevButtonDisabled, setpagePrevButtonDisabled] = useState(true);
+	const [pageNextButtonDisabled, setPageNextButtonDisabled] = useState(false);
 
 
 	// One function to increment or decrement earthDate by one day:
@@ -50,6 +51,10 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 			+ `${"0".concat(tmpEarthDate.getUTCDate()).slice(-2)}`
 // console.log(`PhotoList.js newDate:"${newDate}" new earthDate:"${tmpEarthDate}"`)
 		setEarthDate( old => newDate)
+
+		// Reset page so no Page 3 on date with 1 page of photos:
+		setPage( c => 1);
+		setpagePrevButtonDisabled(c => true);
 		return newDate;
 		}
 
@@ -76,9 +81,9 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 	const incrementPage = (p) =>
 		{
 		if (page + p === 1)
-			setPageButtonDisabled(c => true);
+			setpagePrevButtonDisabled(c => true);
 		else
-			setPageButtonDisabled(c => false);
+			setpagePrevButtonDisabled(c => false);
 		setPage( c => c + p);
 		}
 
@@ -103,9 +108,15 @@ console.log(`dataURL="${dataURL}"`)
 					// return res.ok === true ? res.json() : res.json().then(x => Promise.reject(x) )
 					})
 				.then( res2 => {
-					console.log(`res2:`);
+					console.log(`res2: #photos: ${res2.photos.length}`);
 					console.table(res2.photos);
 					setPhotos( p => res2.photos);
+					if (res2.photos.length === 0)
+						// No photos, so disable Next Page button:
+						setPageNextButtonDisabled( c => true);
+					else
+						// Re-enable Next Page button:
+						setPageNextButtonDisabled( c => false);
 					return res2
 					})
 				.catch( e => {console.log(`%cE R R O R: ${e.message}`, "color:red"); return e; })
@@ -181,7 +192,7 @@ console.table(photos?.camera);
 						<button
 							type="button"
 							value={page}
-							disabled={pageButtonDisabled}
+							disabled={pagePrevButtonDisabled}
 							onClick={() => incrementPage(-1)}
 							>
 							Previous Page
@@ -190,6 +201,7 @@ console.table(photos?.camera);
 							type="button"
 							value={page}
 							onClick={() => incrementPage(+1)}
+							disabled={pageNextButtonDisabled}
 							>
 							Next Page
 						</button>
