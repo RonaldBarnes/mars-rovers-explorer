@@ -97,6 +97,8 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 			{
 			setDatePrevButtonDisabled(c => true);
 			setDateNextButtonDisabled(c => true);
+			setPagePrevButtonDisabled(c => true);
+			setPageNextButtonDisabled(c => true);
 			}
 		else
 			{
