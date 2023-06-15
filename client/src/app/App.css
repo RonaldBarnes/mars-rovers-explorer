@@ -20,15 +20,21 @@ body {
 	right:0;
 	left:0;
 	height: auto; */
+	}
+#App
+	{
 	display: grid;
 	grid-template-areas:
 		"navbar    navbar"
 		"roverlist roverlist"
-		"rovercard camberbuttonlist"
+		"rovercard camerabuttonlist"
 		"photolist photolist"
 		;
-	grid-template-rows: 100px 2fr 1fr;
-	grid-template-columns: 1fr;
+	/* grid-template-rows: 100px min-content 2fr 1fr;
+	grid-template-rows: auto; */
+	/* Leave ⅓ for RoverCard and ⅔ for CameraButtonList: */
+	grid-template-columns: 1fr 2fr;
+	gap: 1rem;
 	}
 
 
@@ -85,3 +91,27 @@ h3 {
 	color: white;
 	}
 
+@media( max-width: 600px)
+	{
+	#App
+		{
+		display: grid;
+		grid-template-areas:
+			"navbar"
+			"roverlist"
+			"rovercard"
+			"camerabuttonlist"
+			"photolist"
+			;
+		/* grid-template-rows: 100px min-content 2fr 1fr;
+		grid-template-rows: auto; */
+		/* Leave ⅓ for RoverCard and ⅔ for CameraButtonList: */
+		grid-template-columns: 1fr;
+		}
+
+	.rover_and_buttons, .CameraButtonList
+		{
+		/* Match NavBar: */
+		margin: 0 25px;
+		}
+	}
