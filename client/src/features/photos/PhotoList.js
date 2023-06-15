@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 // import usePhotoContext from "./usePhotoContext";
 import Photo from "./Photo";
 import useFetch from "../../hooks/useFetch";
@@ -18,44 +19,128 @@ export default function PhotoList({
 		rover
 		})
 	{
-	// const photos = usePhotoContext();
-console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
-	const [page, setPage] = useState(1);
-	const [earthDate, setEarthDate] = useState(rover.max_date);
+	// console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
+	const [searchParams,setSearchParams] = useSearchParams();
+
+	// Query string may have earth_date=2023-06-13&page=2:
+	// Split on "&" then split the first part of that on "=" and take second part:
+	// const [earthDate, setEarthDate] = useState(
+	// 	searchParams.toString().includes("earth_date=")
+	// 		? searchParams.toString().split("&")[0].split("=")[1]
+	// 		: rover.landing_date);
+	// const [earthDate, setEarthDate] = useState( () => {
+	// 	let tmpDate = searchParams.toString();
+	// 	return tmpDate.includes("earth_date=")
+	// 		? tmpDate.split("&")[0].split("=")[1]
+	// 		: rover.landing_date
+	// 	});
+	const [earthDate, setEarthDate] = useState(() =>
+		(searchParams.get("earth_date") || rover.landing_date));
+
+
+	// Same, but different elements split out:
+	// NO ERROR CHECKING DONE, i.e. page=0 or page=k
+	// const [page, setPage] = useState(
+	// 	searchParams?.toString().includes("page=")
+	// 		? searchParams.toString().split("&")[1].split("=")[1]
+	// 		: 1);
+	// const [page, setPage] = useState( () => {
+	// 	let tmpPage = searchParams?.toString();
+	// 	return tmpPage.includes("page=")
+	// 		? parseInt(tmpPage.split("&")[1].split("=")[1])
+	// 		: 1
+	// 	});
+	const [page, setPage] = useState( () =>
+		(searchParams.get("page") || 1));
+
 	const [photos, setPhotos] = useState([]);
+	const [dateFirstButtonDisabled, setDateFirstButtonDisabled] = useState(true);
+	const [datePrevButtonDisabled, setDatePrevButtonDisabled] = useState(true);
 	const [dateNextButtonDisabled, setDateNextButtonDisabled] = useState(true);
-	const [datePrevButtonDisabled, setDatePrevButtonDisabled] = useState(false);
+	const [dateLastButtonDisabled, setDateLastButtonDisabled] = useState(true);
+	// Page forward & backward:
 	const [pagePrevButtonDisabled, setPagePrevButtonDisabled] = useState(true);
-	const [pageNextButtonDisabled, setPageNextButtonDisabled] = useState(false);
+	const [pageNextButtonDisabled, setPageNextButtonDisabled] = useState(true);
+
+
+console.log(`searchParams: "${searchParams}"`)
+
+
 
 
 	// One function to increment or decrement earthDate by one day:
-	const incrementEarthDate = (d) => {
+	const changeEarthDate = (d) => {
 		// Date() uses LOCAL TIME interpretation for params: we need UTC
 		let tmpEarthDate = yyyymmddToUtcDate(earthDate);
-		// Increment by +1/-1 depending on button clicked:
-		tmpEarthDate.setUTCDate( tmpEarthDate.getUTCDate() + d );
-
 		let tmpMaxRoverDate = yyyymmddToUtcDate(rover.max_date);
+		let tmpPage = 1;
+
+		if (d === "first")
+			{
+			tmpEarthDate = yyyymmddToUtcDate(rover.landing_date);
+			}
+		else if (d === "last")
+			{
+			tmpEarthDate = yyyymmddToUtcDate(rover.max_date);
+			}
+		else
+			{
+			// Increment by +1/-1 depending on button clicked:
+			tmpEarthDate.setUTCDate( tmpEarthDate.getUTCDate() + d );
+			}
+
 		// No future dates allowed:
 		if (tmpEarthDate >= tmpMaxRoverDate)
 			{
 			tmpEarthDate = tmpMaxRoverDate;
+			// No paging after max_date:
+			setDateFirstButtonDisabled( c => false);
+			setDatePrevButtonDisabled( c => false);
+			// Paging backward OK:
 			setDateNextButtonDisabled( c => true);
+			setDateLastButtonDisabled( c => true);
+			}
+		else if (tmpEarthDate <= yyyymmddToUtcDate(rover.landing_date) )
+			{
+			// No paging beyond landing date:
+			setDateFirstButtonDisabled( c => true);
+			setDatePrevButtonDisabled( c => true);
+			// Paging forward OK:
+			setDateNextButtonDisabled( c => false);
+			setDateLastButtonDisabled( c => false);
 			}
 		else
+			{
+			// Paging backward OK:
+			setDateFirstButtonDisabled( c => false);
+			setDatePrevButtonDisabled( c => false);
+			// Paging forward OK:
 			setDateNextButtonDisabled( c => false);
+			setDateLastButtonDisabled( c => false);
+			}
 
 		// Create date string as yyyy-mm-dd from UTC elements:
 		const newDate = `${tmpEarthDate.getUTCFullYear()}-`
 			+ `${"0".concat(tmpEarthDate.getUTCMonth() + 1).slice(-2)}-`
 			+ `${"0".concat(tmpEarthDate.getUTCDate()).slice(-2)}`
-// console.log(`PhotoList.js newDate:"${newDate}" new earthDate:"${tmpEarthDate}"`)
+
 		setEarthDate( old => newDate)
 
 		// Reset page so no Page 3 on date with 1 page of photos:
-		setPage( c => 1);
-		setPagePrevButtonDisabled(c => true);
+		// Only if CHANGING the date, not if 0 passed in (which is done to
+		// handle disabling buttons, etc.)
+		if (d === 0)
+			{
+			setSearchParams({ earth_date: newDate, page: page })
+			}
+		else
+			{
+			setPage( c => 1);
+			// No previous when on page 1:
+			setPagePrevButtonDisabled(c => true);
+			setSearchParams({ earth_date: newDate, page: 1 })
+			}
+
 		return newDate;
 		}
 
@@ -78,14 +163,21 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 		}
 
 
+
+
 	// Change page number and disable button so page never equals zero:
 	const incrementPage = (p) =>
 		{
+		// Firefox does string concat, despite parseInt on setState():
+		const intPage = parseInt(page);
+
 		if (page + p === 1)
 			setPagePrevButtonDisabled(c => true);
 		else
 			setPagePrevButtonDisabled(c => false);
-		setPage( c => c + p);
+
+		setPage( c => intPage + p);
+		setSearchParams({ earth_date: earthDate, page: intPage + p })
 		}
 
 
@@ -93,18 +185,31 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 		console.log(`PhotoList.js useEffect() cameraName:"${cameraName}"`)
 
 		// No camera selected, no paging through dates
-		if (cameraName === "?" || cameraName === "")
+		if (cameraName === "?" || cameraName === "" || cameraName === undefined)
 			{
+			console.log(`PhotoList.js useEffect no camera, disabling all pagination buttons:`)
+			setDateFirstButtonDisabled(c => true);
 			setDatePrevButtonDisabled(c => true);
 			setDateNextButtonDisabled(c => true);
+			setDateLastButtonDisabled(c => true);
+			// Pages:
 			setPagePrevButtonDisabled(c => true);
 			setPageNextButtonDisabled(c => true);
 			}
 		else
-			{
-			setDatePrevButtonDisabled(c => false);
-			// setDateNextButtonDisabled(c => false);
-			}
+			// Let existing code handle disabling buttons if required, by paging
+			// zero days forward (then it calculates which buttons are valid):
+			changeEarthDate(0);
+		// else if (earthDate > rover.landing_date)
+		// 	{
+		// 	setDatePrevButtonDisabled(c => false);
+		// 	setDateFirstButtonDisabled(c => false);
+		// 	}
+		// else if (earthDate < rover.max_date)
+		// 	{
+		// 	setDateNextButtonDisabled( c => false);
+		// 	setDateLastButtonDisabled( c => false);
+		// 	}
 
 
 		// setEarthDate( d => `${tmpDate.getFullYear() - 1}-${tmpDate.getMonth()}-${tmpDate.getDate()}` );
@@ -122,27 +227,29 @@ console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}
 						const json = res.json()
 						return json;
 						}
-					// return res.ok === true ? res.json() : res.json().then(x => Promise.reject(x) )
 					})
 				.then( res2 => {
-					console.log(`res2: #photos: ${res2.photos.length}`);
+					// console.log(`res2: #photos: ${res2.photos.length}`);
 					// console.table(res2.photos);
 					setPhotos( p => res2.photos);
-					if (res2.photos.length === 0)
-						// No photos, so disable Next Page button:
+					if (res2.photos.length < 25)
+						{
+						// No photos (more), so disable Next Page button:
 						setPageNextButtonDisabled( c => true);
+						}
 					else
+						{
 						// Re-enable Next Page button:
 						setPageNextButtonDisabled( c => false);
+						}
+					// If disabling & re-enabling a camera's button, AND the page
+					// is > 1, the previous button needs to be enabled.
+					// Best solution would be to lift the state to, say, RoverCard...
+					if (page > 1 && cameraName !== "")
+						setPagePrevButtonDisabled( c => false);
 
-console.log(`EARTHdate: "${earthDate}" rover.max_date: ${rover.max_date}`)
-		if (earthDate === rover.max_date)
-			{
-console.log(`EARTHdate EQUALS: "${earthDate}" rover.max_date: ${rover.max_date}`)
-			setDateNextButtonDisabled(c => true);
-			}
-
-
+console.log(`PhotoList.js useEffect post-fetch page: ${page} `)
+// incrementPage(0)
 					return res2
 					})
 				.catch( e => {console.log(`%cE R R O R: ${e.message}`, "color:red"); return e; })
@@ -181,22 +288,29 @@ console.table(photos?.camera);
 	return (
 		<div className="PhotoList">
 			{/* { displayAllPhotos() } */}
-			<h2>PhotoList...</h2>
+			{/* <h2>PhotoList...</h2>
 			<p>
 				rover.name="{rover.name}"
 				cameraName="{cameraName}"
 				earthDate (UTC) = "{earthDate}"
 				photos?.length (# photos): {photos?.length}
 			</p>
-			{/* <p>API_URL: {API_URL}</p> */}
-			<p>dataURL: "{dataURL}"</p>
+			<p>dataURL: "{dataURL}"</p> */}
 			<div>
 				<form id="earth_date" style={{width:"fit-content", display:"inline-block"}}>
 					<fieldset><legend>Earth Date {earthDate}</legend>
 						<button
 							type="button"
 							value={earthDate}
-							onClick={() => incrementEarthDate(-1)}
+							onClick={() => changeEarthDate("first")}
+							disabled={dateFirstButtonDisabled}
+							>
+							First Day
+						</button>
+						<button
+							type="button"
+							value={earthDate}
+							onClick={() => changeEarthDate(-1)}
 							disabled={datePrevButtonDisabled}
 							>
 							Previous Day
@@ -204,10 +318,18 @@ console.table(photos?.camera);
 						<button
 							type="button"
 							value={earthDate}
-							onClick={() => incrementEarthDate(+1)}
+							onClick={() => changeEarthDate(+1)}
 							disabled={dateNextButtonDisabled}
 							>
 							Next Day
+						</button>
+						<button
+							type="button"
+							value={earthDate}
+							onClick={() => changeEarthDate("last")}
+							disabled={dateLastButtonDisabled}
+							>
+							Last Day
 						</button>
 					</fieldset>
 				</form>
