@@ -3,6 +3,11 @@ div.RoverCard:hover {
 	transform: scale(1.05, 1.05);
 }
 
+
+/*
+ * This is for each card in list of 4 on Rovers NavBar tab.
+ * Single RoverCard with CameraButtonList is below...
+ */
 div.RoverCard {
 	background: rgb(240, 234, 214);
 	box-shadow: 0px 2px 8px rgba(0, 0, 0, 1);
@@ -13,11 +18,6 @@ div.RoverCard {
 	height: 430px;
 	 */
 	height: fit-content;
-	/* Modified for <Link ...>: hover re-sizing looked weird with margins: */
-	/* margin-top: 20px;
-	margin-bottom: 20px; */
-	margin-left: 20px;
-	margin-right: 20px;
 	padding-bottom: 2.5px;
 	padding-left: 2.5px;
 	padding-right: 2.5px;
@@ -25,9 +25,8 @@ div.RoverCard {
 	text-align: center;
 	transition: all 0.4s cubic-bezier(0.175, 0.885, 0, 1);
 	width: 300px;
-	/* Make entire card have pointy finger cursor indicating clickable: */
-	cursor: pointer;
 	margin-inline: auto;
+	margin-block: auto;
 }
 
 h1.RoverCard {
@@ -43,47 +42,21 @@ p.RoverCard {
 	font-size: small;
 }
 
-/*
- * Testing: place RoverCard and CameraButtonsList in flex container.
- * Should leave more space for photos below...
- */
-/* .rover_and_buttons
-	{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	height: 50dvh;
-	overflow-y: hidden;
-	align-items: center;
-	} */
 .rover_and_buttons
 	{
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	place-content: space-evenly;
-	place-items: center;
-	column-gap: 1rem;
-	height: 50dvh;
-	/* Match NavBar: */
-	margin: 1rem 25px 2rem 25px;
-	padding-top: 1rem;
-	/* overflow-y: hidden; */
-	}
-/* .rover_and_buttons .a
-	{
-	display: inline-block
-	} */
-.scroll_able, .CameraButtonList
-	{
-	/* height: 50dvh; */
-	overflow-y: scroll;
+	grid-area: rovercard;
+	/* Align with NavBar: */
+	margin-left: 25px;
+	margin-block: auto;
+	/* padding: 1rem 0; */
 	}
 
-/* Remove pointer when not in list: */
-/* .RoverCard :not(.RoverList)
+/* Disable hover expansion when single rover showing: clicking does nothing: */
+.rover_and_buttons div.RoverCard
 	{
-	cursor: initial;
-	} */
+	cursor: auto;
+	transform: scale(1);
+	}
 
 /* Responsive design requires this: */
 a.RoverCard
