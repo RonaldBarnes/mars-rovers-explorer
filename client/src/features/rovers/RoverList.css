@@ -1,4 +1,5 @@
 
+/* Handle wrapping evenly - responsive design: */
 div#RoverList {
 	grid-area: roverlist;
 	display: grid;
@@ -9,3 +10,29 @@ div#RoverList {
 	margin-inline: 25px;
 	margin-block: 2rem;
 }
+
+@media (max-width: 1250px)
+	{
+	/* Handle wrapping evenly - responsive design: */
+	div#RoverList {
+		display: grid;
+		grid-template-columns: repeat(2,1fr);
+		gap: 1rem;
+		/* Match NavBar: */
+		margin-inline: 25px;
+		justify-content: space-evenly;
+		}
+	}
+
+@media (max-width: 750px)
+	{
+	/* Handle wrapping evenly - responsive design: */
+	div#RoverList {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		/* Match NavBar: */
+		margin-inline: 25px;
+		justify-content: space-evenly;
+		}
+	}
