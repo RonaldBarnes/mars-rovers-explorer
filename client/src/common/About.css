@@ -1,8 +1,16 @@
 /* Why? Let NavBar.css handle this (especially with a.active) */
 #about {
-  background: rgb(240, 234, 214);
-  border-radius: 10px;
-  padding: 10px;
+	grid-area: roverlist;
+	background: rgb(240, 234, 214);
+	border-radius: 10px;
+	padding: 10px;
 	/* Except this: make the width the same as the NavBar: */
-	margin-inline: 25px;
+	margin: 2rem 25px;
+	font-size: 1.25rem;
 }
+
+/* Clearly indicate "official repository" is a link: */
+#about a
+	{
+	text-decoration: revert;
+	}
