@@ -2,6 +2,7 @@
 	{
 	outline: 1px solid lightgreen;
 	} */
+
 html, body
 	{
 	margin: 0;
@@ -20,7 +21,14 @@ body {
 	left:0;
 	height: auto; */
 	display: grid;
-	grid-template-rows: 1fr;
+	grid-template-areas:
+		"navbar    navbar"
+		"roverlist roverlist"
+		"rovercard camberbuttonlist"
+		"photolist photolist"
+		;
+	grid-template-rows: 100px 2fr 1fr;
+	grid-template-columns: 1fr;
 	}
 
 
