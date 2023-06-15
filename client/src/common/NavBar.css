@@ -8,6 +8,7 @@ nav {
   height: 50px;
   justify-content: space-evenly;
   margin: 25px 25px 25px 25px;
+  grid-area: navbar;
 /* Make highlight touch edges of NavBar (by removing padding): */
 /*
   padding-bottom: 5px;
