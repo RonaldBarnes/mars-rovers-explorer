@@ -258,7 +258,13 @@ console.log(`PhotoList.js useEffect post-fetch page: ${page} `)
 
 
 	// let {loading, error, value} = useFetch(dataURL, {"Access-Control-Allow-Origin": "*"});
-	let {loading, error, value} = {loading: true, error: undefined, value:undefined};
+	// let {loading, error, value} = {loading: true, error: undefined, value:undefined};
+	let {loading, error, value} = useFetch(
+		// dataURL,
+		`${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`,
+		{"Access-Control-Allow-Origin": "*"},
+		[earthDate, cameraName, page]
+		);
 
 
 	const [dataURL, setDataURL] =
