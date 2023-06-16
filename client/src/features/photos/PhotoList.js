@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 // import usePhotoContext from "./usePhotoContext";
 import Photo from "./Photo";
@@ -40,8 +40,19 @@ export default function PhotoList({
 	const [pagePrevButtonDisabled, setPagePrevButtonDisabled] = useState(true);
 	const [pageNextButtonDisabled, setPageNextButtonDisabled] = useState(true);
 
+	let dataURL = (earthDate !== "" && cameraName !== "")	// && loading === false)
+		? `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`
+		: `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${rover.max_date}&camera=${cameraName.toLowerCase()}&page=${page}`
 
-// console.log(`searchParams: "${searchParams}"`)
+	// let {loading, error, value} = useFetch(dataURL, {"Access-Control-Allow-Origin": "*"});
+	// let {loading, error, value} = {loading: true, error: undefined, value:undefined};
+	let {loading, error, value} = useFetch(
+		dataURL,
+		// `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`,
+		{"Access-Control-Allow-Origin": "*"},
+		[earthDate, cameraName, page]
+		);
+
 
 
 
@@ -159,13 +170,15 @@ export default function PhotoList({
 		}
 
 
-	useEffect( () => {
-		console.log(`PhotoList.js useEffect() cameraName:"${cameraName}"`)
 
+
+	// Handle useFetch results:
+	useEffect( () => {
+		setPhotos(value?.photos || []);
 		// No camera selected, no paging through dates
 		if (cameraName === "?" || cameraName === "" || cameraName === undefined)
 			{
-			console.log(`PhotoList.js useEffect no camera, disabling all pagination buttons:`)
+			// console.log(`PhotoList.js useEffect no camera, disabling all pagination buttons:`)
 			setDateFirstButtonDisabled(c => true);
 			setDatePrevButtonDisabled(c => true);
 			setDateNextButtonDisabled(c => true);
@@ -175,83 +188,37 @@ export default function PhotoList({
 			setPageNextButtonDisabled(c => true);
 			}
 		else
+			{
 			// Let existing code handle disabling buttons if required, by paging
 			// zero days forward (then it calculates which buttons are valid):
 			changeEarthDate(0);
-		// else if (earthDate > rover.landing_date)
-		// 	{
-		// 	setDatePrevButtonDisabled(c => false);
-		// 	setDateFirstButtonDisabled(c => false);
-		// 	}
-		// else if (earthDate < rover.max_date)
-		// 	{
-		// 	setDateNextButtonDisabled( c => false);
-		// 	setDateLastButtonDisabled( c => false);
-		// 	}
+			}
+
+		// If there are fewer than a full page of photos, disable Next Page:
+		if (value?.photos.length < 25)
+			{
+			// No photos (more), so disable Next Page button:
+			setPageNextButtonDisabled( c => true);
+			}
+		else
+			{
+			// Re-enable Next Page button:
+			setPageNextButtonDisabled( c => false);
+			}
+
+		// If disabling & re-enabling a camera's button, AND the page
+		// is > 1, the previous button needs to be enabled.
+		// Best solution would be to lift the state to, say, RoverCard...
+		if (page > 1 && cameraName !== "")
+			setPagePrevButtonDisabled( c => false);
 
 
-		// setEarthDate( d => `${tmpDate.getFullYear() - 1}-${tmpDate.getMonth()}-${tmpDate.getDate()}` );
-		setDataURL( u =>
-			`${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`);
 
-// console.log(`dataURL="${dataURL}"`)
+		if (error !== undefined)
+			console.log(`%cE R R O R: ${error.message}`, "color:red");
 
-			// fetch(dataURL, {"Access-Control-Allow-Origin": "*"}, [earthDate, cameraName])
-			fetch(`${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`,
-					{"Access-Control-Allow-Origin": "*"}, [earthDate, cameraName])
-				.then( res => {
-					if (res.ok)
-						{
-						const json = res.json()
-						return json;
-						}
-					})
-				.then( res2 => {
-					// console.log(`res2: #photos: ${res2.photos.length}`);
-					// console.table(res2.photos);
-					setPhotos( p => res2.photos);
-					if (res2.photos.length < 25)
-						{
-						// No photos (more), so disable Next Page button:
-						setPageNextButtonDisabled( c => true);
-						}
-					else
-						{
-						// Re-enable Next Page button:
-						setPageNextButtonDisabled( c => false);
-						}
-					// If disabling & re-enabling a camera's button, AND the page
-					// is > 1, the previous button needs to be enabled.
-					// Best solution would be to lift the state to, say, RoverCard...
-					if (page > 1 && cameraName !== "")
-						setPagePrevButtonDisabled( c => false);
-
-console.log(`PhotoList.js useEffect post-fetch page: ${page} `)
-// incrementPage(0)
-					return res2
-					})
-				.catch( e => {console.log(`%cE R R O R: ${e.message}`, "color:red"); return e; })
-
-			}, [earthDate, page, cameraName]);
-
-
-	// let {loading, error, value} = useFetch(dataURL, {"Access-Control-Allow-Origin": "*"});
-	// let {loading, error, value} = {loading: true, error: undefined, value:undefined};
-	let {loading, error, value} = useFetch(
-		// dataURL,
-		`${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`,
-		{"Access-Control-Allow-Origin": "*"},
-		[earthDate, cameraName, page]
-		);
-
-
-	const [dataURL, setDataURL] =
-		useState( u => {
-			if (earthDate !== "" && cameraName !== "" && loading === false)
-				return `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`;
-			else
-				return `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${rover.max_date}&camera=${cameraName.toLowerCase()}&page=${page}`;
-			})
+		return () => setPhotos([])
+		},[loading, error, value])
 
 
 // console.log(`loading: ${loading.toString()}`);
@@ -269,6 +236,8 @@ console.table(photos?.camera);
 	//   <Photo source={photo.source} key={photo.id} />
 	// ));
 
+	// These quick returns cause flickering since the buttons don't render...
+	// Better to show "Loading" below buttons:
 	// if (loading)
 	// 	return( <div className="PhotoList">Loading...</div>);
 	// if (error)
@@ -282,13 +251,13 @@ console.table(photos?.camera);
 				cameraName="{cameraName}"
 				earthDate (UTC) = "{earthDate}"
 				photos?.length (# photos): {photos?.length}
-			</p>
-			<p>
-				{loading ? "Loading..." : "Loaded"}
-				{error ? error.message : "No error"}
-				{value ? value.length : ""}
-			</p>
-			<p>dataURL: "{dataURL}"</p> */}
+			</p> */}
+			{/* <p>
+				{loading ? "Loading..." : "Loaded"} <br />
+				{error ? error.message : "No error"} <br />
+				{value?.photos ? value.photos.length : ""}
+			</p> */}
+			{/* <p>dataURL: "{dataURL}"</p> */}
 			<div>
 				<DateFormButtons
 					earthDate={earthDate}
@@ -304,13 +273,14 @@ console.table(photos?.camera);
 					incrementPage={incrementPage}
 					pagePrevButtonDisabled={pagePrevButtonDisabled}
 					pageNextButtonDisabled={pageNextButtonDisabled}
+					photosCount={photos?.length || 0}
 					/>
 			</div>
 
-			{ loading === true
+			{ (loading === true && cameraName !== "")
 					? <p className="loading" style={{color:"black"}}>Loading...</p>
 					: (error !== undefined)
-						? <p className="loading" style={{color:"red"}}>{error.message}</p>
+						? <p className="loading" style={{color:"red"}}>{error.message}<br />{dataURL}</p>
 						: (photos.length === 0 && cameraName !== "")
 							? <p className="loading" style={{color:"black"}}>No photos</p>
 							: photos.map( (p,idx) => <Photo key={idx} photo={p} rover={rover} />)
@@ -385,13 +355,14 @@ function PageFormButtons({
 		incrementPage,
 		pagePrevButtonDisabled,
 		pageNextButtonDisabled,
+		photosCount
 		})
 	{
 
 	return (
 		<form id="page" style={{width:"fit-content", display:"inline-block"}}>
 			<fieldset>
-				<legend>Page {page}</legend>
+				<legend>Page {page} ({photosCount} image{photosCount > 1 ? "s" : ""})</legend>
 				<button
 					type="button"
 					value={page}
