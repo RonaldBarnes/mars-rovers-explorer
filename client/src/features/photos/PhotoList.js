@@ -21,7 +21,6 @@ export default function PhotoList({
 	{
 	// console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
 	const [searchParams,setSearchParams] = useSearchParams();
-
 	// Query string may have earth_date=2023-06-13&page=2:
 	// Split on "&" then split the first part of that on "=" and take second part:
 	// const [earthDate, setEarthDate] = useState(
@@ -54,6 +53,7 @@ export default function PhotoList({
 		(searchParams.get("page") || 1));
 
 	const [photos, setPhotos] = useState([]);
+	// Date pagination buttons:
 	const [dateFirstButtonDisabled, setDateFirstButtonDisabled] = useState(true);
 	const [datePrevButtonDisabled, setDatePrevButtonDisabled] = useState(true);
 	const [dateNextButtonDisabled, setDateNextButtonDisabled] = useState(true);
@@ -63,7 +63,7 @@ export default function PhotoList({
 	const [pageNextButtonDisabled, setPageNextButtonDisabled] = useState(true);
 
 
-console.log(`searchParams: "${searchParams}"`)
+// console.log(`searchParams: "${searchParams}"`)
 
 
 
@@ -285,9 +285,13 @@ console.table(photos?.camera);
 	//   <Photo source={photo.source} key={photo.id} />
 	// ));
 
+	// if (loading)
+	// 	return( <div className="PhotoList">Loading...</div>);
+	// if (error)
+	// 	return( <div className="PhotoList loading">{error.message}</div>);
+
 	return (
 		<div className="PhotoList">
-			{/* { displayAllPhotos() } */}
 			{/* <h2>PhotoList...</h2>
 			<p>
 				rover.name="{rover.name}"
@@ -295,76 +299,132 @@ console.table(photos?.camera);
 				earthDate (UTC) = "{earthDate}"
 				photos?.length (# photos): {photos?.length}
 			</p>
+			<p>
+				{loading ? "Loading..." : "Loaded"}
+				{error ? error.message : "No error"}
+				{value ? value.length : ""}
+			</p>
 			<p>dataURL: "{dataURL}"</p> */}
 			<div>
-				<form id="earth_date" style={{width:"fit-content", display:"inline-block"}}>
-					<fieldset><legend>Earth Date {earthDate}</legend>
-						<button
-							type="button"
-							value={earthDate}
-							onClick={() => changeEarthDate("first")}
-							disabled={dateFirstButtonDisabled}
-							>
-							First Day
-						</button>
-						<button
-							type="button"
-							value={earthDate}
-							onClick={() => changeEarthDate(-1)}
-							disabled={datePrevButtonDisabled}
-							>
-							Previous Day
-						</button>
-						<button
-							type="button"
-							value={earthDate}
-							onClick={() => changeEarthDate(+1)}
-							disabled={dateNextButtonDisabled}
-							>
-							Next Day
-						</button>
-						<button
-							type="button"
-							value={earthDate}
-							onClick={() => changeEarthDate("last")}
-							disabled={dateLastButtonDisabled}
-							>
-							Last Day
-						</button>
-					</fieldset>
-				</form>
+				<DateFormButtons
+					earthDate={earthDate}
+					changeEarthDate={changeEarthDate}
+					dateFirstButtonDisabled={dateFirstButtonDisabled}
+					datePrevButtonDisabled={datePrevButtonDisabled}
+					dateNextButtonDisabled={dateNextButtonDisabled}
+					dateLastButtonDisabled={dateLastButtonDisabled}
+					/>
 
-				<form id="page" style={{width:"fit-content", display:"inline-block"}}>
-					<fieldset>
-						<legend>Page {page}</legend>
-						<button
-							type="button"
-							value={page}
-							disabled={pagePrevButtonDisabled}
-							onClick={() => incrementPage(-1)}
-							>
-							Previous Page
-						</button>
-						<button
-							type="button"
-							value={page}
-							onClick={() => incrementPage(+1)}
-							disabled={pageNextButtonDisabled}
-							>
-							Next Page
-						</button>
-					</fieldset>
-				</form>
+				<PageFormButtons
+					page={page}
+					incrementPage={incrementPage}
+					pagePrevButtonDisabled={pagePrevButtonDisabled}
+					pageNextButtonDisabled={pageNextButtonDisabled}
+					/>
 			</div>
 
-			{/* <p>loading: "{loading.toString()}"</p>
-			<p>error: "{error?.message}"</p>
-			<p>value?.photos.length: {value?.photos.length}</p> */}
-			{
-				photos.map( (p,idx) => (
-					<Photo photo={p} rover={rover} />
-					))
+			{ loading === true
+					? <p className="loading" style={{color:"black"}}>Loading...</p>
+					: (error !== undefined)
+						? <p className="loading" style={{color:"red"}}>{error.message}</p>
+						: (photos.length === 0 && cameraName !== "")
+							? <p className="loading" style={{color:"black"}}>No photos</p>
+							: photos.map( (p,idx) => <Photo key={idx} photo={p} rover={rover} />)
 			}
 		</div>
 		);	// end return
 	};	// end PhotoList
+
+
+
+
+
+
+
+function DateFormButtons({
+		earthDate,
+		changeEarthDate,
+		dateFirstButtonDisabled,
+		datePrevButtonDisabled,
+		dateNextButtonDisabled,
+		dateLastButtonDisabled,
+		})
+	{
+
+	return (
+		<form id="earth_date" style={{width:"fit-content", display:"inline-block"}}>
+			<fieldset><legend>Earth Date {earthDate}</legend>
+				<button
+					type="button"
+					value={earthDate}
+					onClick={() => changeEarthDate("first")}
+					disabled={dateFirstButtonDisabled}
+					>
+					First Day
+				</button>
+				<button
+					type="button"
+					value={earthDate}
+					onClick={() => changeEarthDate(-1)}
+					disabled={datePrevButtonDisabled}
+					>
+					Previous Day
+				</button>
+				<button
+					type="button"
+					value={earthDate}
+					onClick={() => changeEarthDate(+1)}
+					disabled={dateNextButtonDisabled}
+					>
+					Next Day
+				</button>
+				<button
+					type="button"
+					value={earthDate}
+					onClick={() => changeEarthDate("last")}
+					disabled={dateLastButtonDisabled}
+					>
+					Last Day
+				</button>
+			</fieldset>
+		</form>
+		);
+	}	// end DateFormButtons
+
+
+
+
+
+
+function PageFormButtons({
+		page,
+		incrementPage,
+		pagePrevButtonDisabled,
+		pageNextButtonDisabled,
+		})
+	{
+
+	return (
+		<form id="page" style={{width:"fit-content", display:"inline-block"}}>
+			<fieldset>
+				<legend>Page {page}</legend>
+				<button
+					type="button"
+					value={page}
+					disabled={pagePrevButtonDisabled}
+					onClick={() => incrementPage(-1)}
+					>
+					Previous Page
+				</button>
+				<button
+					type="button"
+					value={page}
+					onClick={() => incrementPage(+1)}
+					disabled={pageNextButtonDisabled}
+					>
+					Next Page
+				</button>
+			</fieldset>
+		</form>
+		)
+	}	// end PageFormButtons
