@@ -22,33 +22,11 @@ export default function PhotoList({
 	// console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
 	const [searchParams,setSearchParams] = useSearchParams();
 	// Query string may have earth_date=2023-06-13&page=2:
-	// Split on "&" then split the first part of that on "=" and take second part:
-	// const [earthDate, setEarthDate] = useState(
-	// 	searchParams.toString().includes("earth_date=")
-	// 		? searchParams.toString().split("&")[0].split("=")[1]
-	// 		: rover.landing_date);
-	// const [earthDate, setEarthDate] = useState( () => {
-	// 	let tmpDate = searchParams.toString();
-	// 	return tmpDate.includes("earth_date=")
-	// 		? tmpDate.split("&")[0].split("=")[1]
-	// 		: rover.landing_date
-	// 	});
 	const [earthDate, setEarthDate] = useState(() =>
 		(searchParams.get("earth_date") || rover.landing_date));
 
-
 	// Same, but different elements split out:
 	// NO ERROR CHECKING DONE, i.e. page=0 or page=k
-	// const [page, setPage] = useState(
-	// 	searchParams?.toString().includes("page=")
-	// 		? searchParams.toString().split("&")[1].split("=")[1]
-	// 		: 1);
-	// const [page, setPage] = useState( () => {
-	// 	let tmpPage = searchParams?.toString();
-	// 	return tmpPage.includes("page=")
-	// 		? parseInt(tmpPage.split("&")[1].split("=")[1])
-	// 		: 1
-	// 	});
 	const [page, setPage] = useState( () =>
 		(searchParams.get("page") || 1));
 
