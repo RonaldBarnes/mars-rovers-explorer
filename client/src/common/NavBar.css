@@ -1,8 +1,12 @@
 header
   {
   grid-area: navbar;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   }
 nav {
+  box-shadow: 0px 0px 15px 5px gray;
   /* Plays havoc with hover on a link elements: */
   /* align-items: center; */
   align-items: flex-end;
