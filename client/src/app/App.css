@@ -89,6 +89,8 @@ h3 {
 	margin-block: 1rem;
 	font-size: 2rem;
 	color: white;
+	/* Place near top, spanning screen width: */
+	grid-area: roverlist;
 	}
 
 @media( max-width: 600px)
