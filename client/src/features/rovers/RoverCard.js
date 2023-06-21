@@ -91,9 +91,9 @@ export default function RoverCard({
 				<div className="RoverCard" id={`RoverCard-${id}`} roverid={id}>
 					<h1 className="RoverCard" roverid={id}>{ name }</h1>
 					<img alt={`Mars rover, ${name}`} className="RoverCard" roverid={id} src={profile_pic} />
-					<p className="RoverCard">Mission { status } {status === "complete" ? max_date : ""}</p>
-					<p className="RoverCard">Launched { launch_date }</p>
-					<p className="RoverCard">Landed { landing_date }</p>
+					<p className="RoverCard">Mission: <span style={{fontWeight:"bold"}}>{ status }</span> {status === "complete" ? max_date : ""}</p>
+					<p className="RoverCard">Launched: { launch_date }</p>
+					<p className="RoverCard">Landed: { landing_date }</p>
 					<p className="RoverCard">Total photos: { Intl.NumberFormat().format(rover.total_photos) }</p>
 				</div>
 			</div>
