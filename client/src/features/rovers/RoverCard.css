@@ -27,7 +27,14 @@ div.RoverCard {
 	width: 300px;
 	margin-inline: auto;
 	margin-block: auto;
+	padding: 1rem;
 }
+a.RoverCard:hover,
+a.RoverCard:focus,
+a.RoverCard:active
+	{
+	background-color: transparent;
+	}
 
 h1.RoverCard {
 	text-align: center;
