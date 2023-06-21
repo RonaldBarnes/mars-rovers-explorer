@@ -2,17 +2,27 @@
 	{
 	outline: 1px solid lightgreen;
 	} */
-
-html, body
+*,
+*::before,
+*::after
+	{
+	box-sizing: border-box;
+	}
+*
 	{
 	margin: 0;
 	padding: 0;
+	font: inherit;
+	}
+
+html, body
+	{
 	height: 100%;
-	box-sizing: border-box;
 	}
 
 body {
 	background-color: #212426;
+	min-height: 100dvh;
 	/* Full screen height, NO scroll bar (unless overflow): */
 	/* position:absolute;
 	top:0;
@@ -21,6 +31,7 @@ body {
 	left:0;
 	height: auto; */
 	}
+
 #App
 	{
 	display: grid;
@@ -79,7 +90,16 @@ h2,
 h3 {
 	letter-spacing: 1px;
 }
+h1
+	{
+	font-size: 2rem;
+	margin-block: 0.5rem;
+	}
 
+p
+	{
+	margin-block: 1rem;
+	}
 
 .loading
 	{
