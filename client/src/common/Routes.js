@@ -21,7 +21,7 @@ export default function MyRoutes() {
 						{/* <Route path=":camera_id" element={<RoverCard />} /> */}
 					</Route>
 				</Route>
-				<Route path="/photos/:rover_name?" component={<RoverCard />} />
+				<Route path="/photos/:rover_name?" element={<RoverCard />} />
 				<Route path="/about" element={<About />} />
 				{/* Catch any other URL paths, send to About: */}
 				<Route path="/*" element={<About />} />
