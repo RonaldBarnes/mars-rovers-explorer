@@ -362,7 +362,7 @@ function PageFormButtons({
 	return (
 		<form id="page" style={{width:"fit-content", display:"inline-block"}}>
 			<fieldset>
-				<legend>Page {page} ({photosCount} image{photosCount > 1 ? "s" : ""})</legend>
+				<legend>Page {page} ({photosCount} image{photosCount !== 1 ? "s" : ""})</legend>
 				<button
 					type="button"
 					value={page}
