@@ -13,6 +13,7 @@ export default function About() {
         <a
           href="https://github.com/pekellogg/react-app"
           target="_blank"
+          rel="noreferrer"
           >
           her Github repo
         </a>.
@@ -22,6 +23,7 @@ export default function About() {
         <figcaption style={{marginBottom:"1rem"}}>
           <a href="https://xkcd.com/695/"
             target="_blank"
+            rel="noreferrer"
             >
             Obligatory xkcd
           </a> entitled "<b><i>Spirit</i></b>" (a Very Good Rover):
