@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 import CameraButton from "./CameraButton";
 
@@ -7,22 +6,15 @@ import "./CameraButton.css";
 
 
 export default function CameraButtonList({
-	cameras=[],
-	rover_name,
-	display = "block",
-	id,
-	cameraName,
-	setCameraName,
-	// toggleCamera
-	})
+		cameras=[],
+		rover_name,
+		id,
+		cameraName,
+		setCameraName,
+		})
 	{
 // console.log(`CameraButtonList.js`)
 
-
-	// If we're on an URL for a camera, and that camera's button is clicked again,
-	// remove camera_id from URL:
-	let params = useParams();
-	let camera_id = params.camera_id;
 
 	return (
 		<div className="CameraButtonList">
@@ -35,7 +27,6 @@ export default function CameraButtonList({
 								key={c.id}
 								cameraName={cameraName}
 								setCameraName={setCameraName}
-								// toggleCamera={toggleCamera}
 								/>
 						</Link>
 						)
