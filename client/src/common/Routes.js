@@ -12,19 +12,28 @@ export default function MyRoutes() {
 			<NavBar />
 			<Routes>
 				<Route exact path="/" element={<RoverList />} />
+
 				<Route path="/rovers" element={<RoverList />}>
+					{ /* Nested routes: optional camera_id:. */ }
 					<Route
 						path=":rover_name/:camera_id?"
-						element={<RoverCard />}
+						element={<RoverCard pagination_buttons={true} show_buttons={true} />}
 						>
-						{/* No need for child / nested route: optional camera_id above. */}
-						{/* <Route path=":camera_id" element={<RoverCard />} /> */}
 					</Route>
 				</Route>
-				<Route path="/photos/:rover_name?" element={<RoverCard />} />
+
+				{ /* If asking for latest photos, ask which rover: */ }
+				<Route path="/photos" element={<RoverList />}>
+					<Route
+						path=":rover_name"
+						element={<RoverCard pagination_buttons={false} show_buttons={false} />}
+						/>
+				</Route>
+
 				<Route path="/about" element={<About />} />
-				{/* Catch any other URL paths, send to About: */}
-				<Route path="/*" element={<About />} />
+
+				{/* Catch any other URL paths, send to Rovers List: */}
+				<Route path="/*" element={<RoverList />} />
 			</Routes>
 		</>
 		);	// end return
