@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 
-export default function useAsync(callback, dependencies = [])
+export default function useAsync(callbackFn, dependencies = [])
 	{
 	console.log(`%cuseAsync`, "color:lightblue");
 console.log(`useAsync() dependencies: ${dependencies}`)
@@ -16,11 +16,11 @@ console.log(`%cuseAsync MEMOIZED`, "color:lightblue");
 		setLoading(true);
 		setError(undefined);
 		setValue(undefined);
-		callback()
+		callbackFn()
 			.then(setValue)
 			.catch(setError)
 			.finally( () => setLoading(false))
-		}, dependencies
+		}, dependencies	// [callbackFn]
 		);	// end callbackMemoized
 
 
