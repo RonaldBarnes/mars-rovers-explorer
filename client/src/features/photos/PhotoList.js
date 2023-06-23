@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-// import usePhotoContext from "./usePhotoContext";
+import { useParams, useSearchParams, useLocation } from "react-router-dom";
+
 import Photo from "./Photo";
 import useFetch from "../../hooks/useFetch";
 
@@ -8,6 +8,7 @@ import { API_URL } from "../../app/App";
 
 import "./PhotoList.css";
 
+// Notable URLs:
 // http://mars-photos.herokuapp.com/api/v1/rovers/curiosity/photos?sol=1000&page=2
 // http://mars-photos.herokuapp.com/api/v1/rovers/curiosity/photos?earth_date=2015-6-3
 // http://mars-photos.herokuapp.com/api/v1/rovers/opportunity/photos?earth_date=2015-6-3&camera=pancam
@@ -16,11 +17,13 @@ import "./PhotoList.css";
 
 export default function PhotoList({
 		cameraName = "?",
-		rover
+		rover,
+		pagination_buttons = true,
 		})
 	{
 	// console.log(`PhotoList.js rover.name: "${rover.name}" cameraName: "${cameraName}"`)
 	const [searchParams,setSearchParams] = useSearchParams();
+
 	// Query string may have earth_date=2023-06-13&page=2:
 	const [earthDate, setEarthDate] = useState(() =>
 		(searchParams.get("earth_date") || rover.landing_date));
@@ -31,6 +34,7 @@ export default function PhotoList({
 		(searchParams.get("page") || 1));
 
 	const [photos, setPhotos] = useState([]);
+
 	// Date pagination buttons:
 	const [dateFirstButtonDisabled, setDateFirstButtonDisabled] = useState(true);
 	const [datePrevButtonDisabled, setDatePrevButtonDisabled] = useState(true);
@@ -44,8 +48,16 @@ export default function PhotoList({
 		? `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`
 		: `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${rover.max_date}&camera=${cameraName.toLowerCase()}&page=${page}`
 
-	// let {loading, error, value} = useFetch(dataURL, {"Access-Control-Allow-Origin": "*"});
-	// let {loading, error, value} = {loading: true, error: undefined, value:undefined};
+	const params = useParams();
+	const rover_name = params.rover_name;
+
+	const location = useLocation();
+
+	if (location.pathname.indexOf("/photos") === 0)
+		{
+		dataURL = `${API_URL}/rovers/${rover_name.toLowerCase()}/latest_photos`
+		}
+
 	let {loading, error, value} = useFetch(
 		dataURL,
 		// `${API_URL}/rovers/${rover.name.toLowerCase()}/photos?earth_date=${earthDate}&camera=${cameraName.toLowerCase()}&page=${page}`,
@@ -55,14 +67,11 @@ export default function PhotoList({
 
 
 
-
-
 	// One function to increment or decrement earthDate by one day:
 	const changeEarthDate = (d) => {
 		// Date() uses LOCAL TIME interpretation for params: we need UTC
 		let tmpEarthDate = yyyymmddToUtcDate(earthDate);
 		let tmpMaxRoverDate = yyyymmddToUtcDate(rover.max_date);
-		let tmpPage = 1;
 
 		if (d === "first")
 			{
@@ -174,7 +183,10 @@ export default function PhotoList({
 
 	// Handle useFetch results:
 	useEffect( () => {
-		setPhotos(value?.photos || []);
+console.log(`%cPhotoList.js value: (length=${value?.photos?.length || value?.latest_photos?.length})`, "color:red")
+console.table(value);
+		setPhotos( c => value?.photos || value?.latest_photos || []);
+
 		// No camera selected, no paging through dates
 		if (cameraName === "?" || cameraName === "" || cameraName === undefined)
 			{
@@ -195,9 +207,9 @@ export default function PhotoList({
 			}
 
 		// If there are fewer than a full page of photos, disable Next Page:
-		if (value?.photos.length < 25)
+		if (value?.photos?.length < 25)
 			{
-			// No photos (more), so disable Next Page button:
+			// No (more) photos, so disable Next Page button:
 			setPageNextButtonDisabled( c => true);
 			}
 		else
@@ -210,7 +222,10 @@ export default function PhotoList({
 		// is > 1, the previous button needs to be enabled.
 		// Best solution would be to lift the state to, say, RoverCard...
 		if (page > 1 && cameraName !== "")
+			{
+			console.log(`%cPhotoList.js page > 1 and cameraName !== "" (${page} and ${cameraName})`)
 			setPagePrevButtonDisabled( c => false);
+			}
 
 
 
@@ -218,7 +233,7 @@ export default function PhotoList({
 			console.log(`%cE R R O R: ${error.message}`, "color:red");
 
 		return () => setPhotos([])
-		},[loading, error, value])
+		},[loading, error, value, cameraName, earthDate, changeEarthDate, page])
 
 
 // console.log(`loading: ${loading.toString()}`);
@@ -252,32 +267,38 @@ console.table(photos?.camera);
 				earthDate (UTC) = "{earthDate}"
 				photos?.length (# photos): {photos?.length}
 			</p> */}
-			{/* <p>
-				{loading ? "Loading..." : "Loaded"} <br />
-				{error ? error.message : "No error"} <br />
-				{value?.photos ? value.photos.length : ""}
-			</p> */}
+			<>
+				{/* {loading ? <p className="loading" style={{color:"black"}}>Loading...</p> : ""} */}
+				{/* {error ? <p className="loading" style={{color:"red"}}>{error.message}</p> : ""} */}
+				<p>Number of images found: {photos.length}</p>
+			</>
 			{/* <p>dataURL: "{dataURL}"</p> */}
 			<div>
-				<DateFormButtons
-					earthDate={earthDate}
-					changeEarthDate={changeEarthDate}
-					dateFirstButtonDisabled={dateFirstButtonDisabled}
-					datePrevButtonDisabled={datePrevButtonDisabled}
-					dateNextButtonDisabled={dateNextButtonDisabled}
-					dateLastButtonDisabled={dateLastButtonDisabled}
-					/>
+				{ /* Don't show navigation buttons if on latest photos: */ }
+				{/* location.pathname.indexOf("/photos") === -1 && */}
+				{ pagination_buttons &&
+				<>
+					<DateFormButtons
+						earthDate={earthDate}
+						changeEarthDate={changeEarthDate}
+						dateFirstButtonDisabled={dateFirstButtonDisabled}
+						datePrevButtonDisabled={datePrevButtonDisabled}
+						dateNextButtonDisabled={dateNextButtonDisabled}
+						dateLastButtonDisabled={dateLastButtonDisabled}
+						/>
 
-				<PageFormButtons
-					page={page}
-					incrementPage={incrementPage}
-					pagePrevButtonDisabled={pagePrevButtonDisabled}
-					pageNextButtonDisabled={pageNextButtonDisabled}
-					photosCount={photos?.length || 0}
-					/>
+					<PageFormButtons
+						page={page}
+						incrementPage={incrementPage}
+						pagePrevButtonDisabled={pagePrevButtonDisabled}
+						pageNextButtonDisabled={pageNextButtonDisabled}
+						photosCount={photos?.length || 0}
+						/>
+				</>
+				}
 			</div>
 
-			{ (loading === true && cameraName !== "")
+			{ (loading === true)
 					? <p className="loading" style={{color:"black"}}>Loading...</p>
 					: (error !== undefined)
 						? <p className="loading" style={{color:"red"}}>{error.message}<br />{dataURL}</p>
