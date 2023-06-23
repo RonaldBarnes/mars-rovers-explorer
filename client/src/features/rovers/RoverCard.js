@@ -1,6 +1,6 @@
 // import displayDate from "../../common/displayDate";
-import { useParams, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import PhotoList from "../photos/PhotoList";
 
@@ -11,51 +11,62 @@ import CameraButtonList from "../cameras/CameraButtonList";
 import "./RoverCard.css";
 
 
-// Props only passed in when called from RoverList,
-// NOT when accessed via URL params:
 export default function RoverCard({
 		rover = [],
-		show_buttons = true
+		show_buttons = true,
+		pagination_buttons = true
 		})
 	{
 	// Asynchronous fetch results of all rovers, only updates when App.js re-renders:
 	const {loading, error, rovers} = useContext(RoverContext);
 
+	// State lifted from CameraButtonList, passed to CameraButtonList and PhotoList as props:
 	const [cameraName, setCameraName] = useState("");
 
 	// When camera button DE-selected, navigate back to /rovers/$name:
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
+	const location = useLocation();
 
 	const params = useParams()
-	// Check for URL like /rovers/curiosity:
+	// Check for URL like /rovers/curiosity/MAST:
 	const rover_name = params.rover_name;
 	let camera_id = params.camera_id;
 
 	// Add a grid class IF this is a single rover, not part of a list:
-	// The buttons will be in second grid area (no reponsive design yet):
+	// The buttons will be in second grid area:
 	let class_name = "";
 
 	// Handle situation where accessed via URL params, i.e. NOT part of
 	// list of all rovers, AND fetch has returned a list of rovers:
 	if ( rover_name !== undefined && rovers !== undefined )
 		{
-		console.log(`RoverCard.js rover_name via useParams(): ${rover_name} camera_id=${camera_id}`)
+		console.log(`RoverCard.js rover_name via useParams(): "${rover_name}" camera_id="${camera_id}"`)
 		// Our URL is for one rover: extract all its data from original fetch'd data:
 		rover = rovers.find( r => r.name.toLowerCase() === rover_name.toLowerCase())
-		// Since it's a single rover, show camera buttons:
-		show_buttons = true;
+
 		// Set the title bar to this rover's name and camera name (abbreviated):
-		document.title = `Mars Rovers: ${rover.name} ${camera_id === undefined ? "" : camera_id}`
-		// Set a flex class so buttons are beside rover,
+		document.title = `Mars Rovers: ${rover.name}`
+		document.title += ` ${camera_id === undefined ? "" : camera_id}`
+		document.title += ` ${location.pathname.indexOf("/photos") === 0 ? " Latest Photos" : ""}`
+
+		// Set a CSS class so buttons are beside rover,
 		// leaving room for photos below (film strip previews perhaps):
 		class_name = "rover_and_buttons";
 		}
 
 	// If arriving via URL link, state hasn't been set; set it:
-	if (camera_id !== undefined && cameraName === "")
-		setCameraName(c => camera_id);
-		// toggleCamera(camera_id);
+	// if (camera_id !== undefined && cameraName === "")
+	// 	{
+	// 	console.log(`RoverCard.js camera_id:"${camera_id}" and cameraName="": setCameraName() next`)
+	// 	setCameraName(c => camera_id);
+	// 	}
 
+	// if (location.pathname.indexOf("/photos") === 0)
+	// 	{
+	// 	// No navigating through photos via camera name at /photos:
+	// 	console.log(`RoverCard.js show_buttons:"${show_buttons}" (switching to false next)`)
+	// 	show_buttons = false;
+	// 	}
 
 	// Attempt to lift state when changing URL when DE-selecting camera:
 	// (async function because setState(e.currentTarget.value) says e is undefined)
@@ -106,16 +117,19 @@ export default function RoverCard({
 						id={id}
 						cameraName={cameraName}
 						setCameraName={setCameraName}
-						// toggleCamera={toggleCamera}
 						/>
 				</>
 				}
-			{/* <Outlet /> */}
-				{show_buttons &&	// cameraName &&
+
+				{ /* If a rover selected AND (a camera selected or URL at /photos),
+					show photo list: */ }
+				{ rover_name !== undefined
+					&& (cameraName !== "" || location.pathname.indexOf("/photos") === 0) &&
 				<>
 					<PhotoList
 						cameraName={cameraName}
 						rover={rover}
+						pagination_buttons={pagination_buttons}
 						/>
 				</>
 				}
