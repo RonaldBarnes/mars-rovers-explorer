@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-
+import { useLocation } from "react-router-dom";
 
 export default function Photo({ photo, rover })
 	{
@@ -8,6 +8,12 @@ export default function Photo({ photo, rover })
 
 	const [fullScreen, setFullScreen] = useState(false);
 
+	// If we're on a /photos page, indicate camera name;
+	// if we're on a /rovers/rover_name/camera_name, then the camera is already known:
+	const location = useLocation();
+	const cameraDisplayName = location.pathname.indexOf("/photos") === 0
+		? `${photo.camera.full_name}`
+		: ""
 
 	const imageInfo = `Image Info:
 	Earth Date: ${photo.earth_date}
@@ -43,7 +49,9 @@ export default function Photo({ photo, rover })
 				title={imageInfo}
 				onClick={handleClick}
 				/>
-			<figcaption>{photo.earth_date} #{photo.id}</figcaption>
+			<figcaption>
+				{photo.earth_date} #{photo.id}<br />{cameraDisplayName}
+			</figcaption>
 			</figure>
 		</div>
 		);
