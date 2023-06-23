@@ -1,6 +1,4 @@
-// import { useDisplayToggle } from "../../common/Toggle";
-import PhotoList from "../photos/PhotoList";
-import { redirect, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import "./CameraButton.css";
 
