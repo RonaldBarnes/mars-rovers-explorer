@@ -8,15 +8,18 @@ import { RoverContext } from "../../app/App";
 
 import "./RoverList.css";
 
-// Set title bar - nice for looking at history:
-document.title = "Mars Rovers: All Rovers";
 
 
 export default function RoverList()
 	{
+	// Set title bar - nice for looking at history:
+	document.title = "Mars Rovers: All Rovers";
+
 	// Asynchronous fetch results of all rovers, only updates when App.js re-renders:
 	const {loading, error, rovers} = useContext(RoverContext);
 
+	const params = useParams();
+	const rover_name = params.rover_name;
 
 	// If no rover data (i.e. loading), or if error fetching data:
 	if (loading === true)
@@ -30,17 +33,21 @@ export default function RoverList()
 
 
 	return (
-		<div id="RoverList">
-			{ rovers.map( (rover,idx) => (
-				<Link to={`/rovers/${rover.name.toLowerCase()}`} className="RoverCard" key={idx}>
-					<RoverCard rover={rover}
-						key={idx}
-						show_buttons={false}
-						/>
-				</Link>
-				))
-			}
+		<>
+			<div id="RoverList">
+				{
+				/* If /rovers/rover_name is URL, don't show ALL rovers: */
+				rover_name === undefined && rovers.map( (rover,idx) => (
+					<Link to={`${rover.name.toLowerCase()}`} className="RoverCard" key={idx}>
+						<RoverCard rover={rover}
+							key={idx}
+							show_buttons={false}
+							/>
+					</Link>
+					))
+				}
+			</div>
 			<Outlet />
-		</div>
+		</>
 		);	// end return
 	};	// end RoverList
