@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useSearchParams, useLocation } from "react-router-dom";
 
 import Photo from "./Photo";
@@ -66,9 +66,14 @@ export default function PhotoList({
 		);
 
 
+// [eslint]
+// src/features/photos/PhotoList.js
+//   Line 71:8:  The 'changeEarthDate' function makes the dependencies of useEffect Hook
+//   (at line 236) change on every render. To fix this, wrap the definition of
+//   'changeEarthDate' in its own useCallback() Hook  react-hooks/exhaustive-deps
 
 	// One function to increment or decrement earthDate by one day:
-	const changeEarthDate = (d) => {
+	const changeEarthDate = useCallback((d) => {
 		// Date() uses LOCAL TIME interpretation for params: we need UTC
 		let tmpEarthDate = yyyymmddToUtcDate(earthDate);
 		let tmpMaxRoverDate = yyyymmddToUtcDate(rover.max_date);
@@ -140,7 +145,8 @@ export default function PhotoList({
 			}
 
 		return newDate;
-		}
+		}, [earthDate, page, rover.landing_date, rover.max_date, setSearchParams]
+		) // end changeEarthDate()
 
 
 
