@@ -20,17 +20,17 @@ export default function RoverCard({
 	// Asynchronous fetch results of all rovers, only updates when App.js re-renders:
 	const {loading, error, rovers} = useContext(RoverContext);
 
-	// State lifted from CameraButtonList, passed to CameraButtonList and PhotoList as props:
-	const [cameraName, setCameraName] = useState("");
-
-	// When camera button DE-selected, navigate back to /rovers/$name:
-	// const navigate = useNavigate();
-	const location = useLocation();
-
 	const params = useParams()
 	// Check for URL like /rovers/curiosity/MAST:
 	const rover_name = params.rover_name;
 	let camera_id = params.camera_id;
+
+	// State lifted from CameraButtonList, passed to CameraButtonList and PhotoList as props:
+	const [cameraName, setCameraName] = useState(camera_id || "");
+
+	// When camera button DE-selected, navigate back to /rovers/$name:
+	// const navigate = useNavigate();
+	const location = useLocation();
 
 	// Add a grid class IF this is a single rover, not part of a list:
 	// The buttons will be in second grid area:
