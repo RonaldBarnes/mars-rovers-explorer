@@ -13,12 +13,25 @@ div.Photo
 	/* width: 100px;
 	height: 100px; */
 	/* aspect-ratio: 1/1; */
+
 	}
 div.PhotoList img
 	{
 	width: 200px;
 	height: 200px;
 	transition: transform 1.5s cubic-bezier(0.175, 0.885, 0, 1);
+	cursor: pointer;
+	}
+div.Photo figure
+	{
+	margin: 1rem;
+	width: 200px;
+	/* height: 200px; */
+	}
+
+figcaption
+	{
+	text-align: center;
 	}
 
 /* div.PhotoList img:hover
@@ -36,9 +49,11 @@ div.PhotoList img
 	{
 	transform: scale(5);
 	/* transform: translate(300); */
-	position: absolute;
 	position: relative;
 	top: 5rem;
 	left: 5rem;
-	transition: transform 1.0s cubic-bezier(0.175, 0.885, 0, 1);
+	position: absolute;
+	top: 700px;
+	left: 500px;
+	transition: all 1.0s cubic-bezier(0.175, 0.885, 0, 1);
 	}
