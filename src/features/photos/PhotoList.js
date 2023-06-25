@@ -74,6 +74,7 @@ export default function PhotoList({
 
 	// One function to increment or decrement earthDate by one day:
 	const changeEarthDate = useCallback((d) => {
+	// const changeEarthDate = (d) => {
 		// Date() uses LOCAL TIME interpretation for params: we need UTC
 		let tmpEarthDate = yyyymmddToUtcDate(earthDate);
 		let tmpMaxRoverDate = yyyymmddToUtcDate(rover.max_date);
@@ -189,8 +190,8 @@ export default function PhotoList({
 
 	// Handle useFetch results:
 	useEffect( () => {
-console.log(`%cPhotoList.js value: (length=${value?.photos?.length || value?.latest_photos?.length})`, "color:red")
-console.table(value);
+// console.log(`%cPhotoList.js useEffect() value: (length=${value?.photos?.length || value?.latest_photos?.length})`, "color:red")
+// console.table(value?.photos || value?.latest_photos );
 		setPhotos( c => value?.photos || value?.latest_photos || []);
 
 		// No camera selected, no paging through dates
@@ -249,9 +250,9 @@ if (error !== undefined)
 	console.table(error?.message);
 	}
 
-console.log(`photos.length: ${photos.length}`)
+console.log(`PhotoList.js photos.length: ${photos.length}`)
 // console.table(photos);
-console.table(photos?.camera);
+// console.table(photos?.camera);
 
 	// const displayAllPhotos = () => photos.map((photo) => (
 	//   <Photo source={photo.source} key={photo.id} />
