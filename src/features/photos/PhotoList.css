@@ -13,7 +13,7 @@ div.Photo
 	/* width: 100px;
 	height: 100px; */
 	/* aspect-ratio: 1/1; */
-
+	vertical-align: top;
 	}
 div.PhotoList img
 	{
