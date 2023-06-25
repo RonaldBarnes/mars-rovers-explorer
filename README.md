@@ -2,11 +2,14 @@
 
 Explore the Red Planet through the photos taken by NASA rovers, Curiosity, Opportunity, Spirit and Perseverance[^1].
 
+## Live Site
+[Live, interactive site.](http://bclug.ca:3005)
+
 ## Usage
 
 ***Rovers tab: all rovers***
 
-![Screenshot of all rovers at the Rovers tab.](/screenshots/mars-rovers-1470x587.jpg)
+![Screenshot of all rovers: select one for accessing photos.](/screenshots/mars-rovers-1470x587.jpg)
 
 ***Rovers tab: click Perseverance***
 
