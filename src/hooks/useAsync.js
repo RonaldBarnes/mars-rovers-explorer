@@ -20,7 +20,7 @@ console.log(`%cuseAsync MEMOIZED`, "color:lightblue");
 			.then(setValue)
 			.catch(setError)
 			.finally( () => setLoading(false))
-		}, dependencies	// [callbackFn]
+		}, [callbackFn, dependencies]
 		);	// end callbackMemoized
 
 
