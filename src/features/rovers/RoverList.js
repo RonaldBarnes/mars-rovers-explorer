@@ -9,7 +9,6 @@ import { RoverContext } from "../../app/App";
 import "./RoverList.css";
 
 
-
 export default function RoverList()
 	{
 	// Set title bar - nice for looking at history:
@@ -34,10 +33,11 @@ export default function RoverList()
 
 	return (
 		<>
-			<div id="RoverList">
 				{
 				/* If /rovers/rover_name is URL, don't show ALL rovers: */
-				rover_name === undefined && rovers.map( (rover,idx) => (
+				rover_name === undefined &&
+					<div id="RoverList">
+					{ rovers.map( (rover,idx) => (
 					<Link to={`${rover.name.toLowerCase()}`} className="RoverCard" key={idx}>
 						<RoverCard rover={rover}
 							key={idx}
@@ -45,8 +45,9 @@ export default function RoverList()
 							/>
 					</Link>
 					))
+					}
+					</div>
 				}
-			</div>
 			<Outlet />
 		</>
 		);	// end return
