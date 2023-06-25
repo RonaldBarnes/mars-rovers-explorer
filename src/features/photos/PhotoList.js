@@ -135,14 +135,18 @@ export default function PhotoList({
 		// handle disabling buttons, etc.)
 		if (d === 0)
 			{
-			setSearchParams({ earth_date: newDate, page: page })
+			searchParams.set("earth_date", newDate);
+			searchParams.set("page", page)
+			setSearchParams(searchParams)
 			}
 		else
 			{
 			setPage( c => 1);
 			// No previous when on page 1:
 			setPagePrevButtonDisabled(c => true);
-			setSearchParams({ earth_date: newDate, page: 1 })
+			searchParams.set("earth_date", newDate);
+			searchParams.set("page", page)
+			setSearchParams(searchParams)
 			}
 
 		return newDate;
@@ -182,7 +186,8 @@ export default function PhotoList({
 			setPagePrevButtonDisabled(c => false);
 
 		setPage( c => intPage + p);
-		setSearchParams({ earth_date: earthDate, page: intPage + p })
+		searchParams.set("page", intPage + p)
+		setSearchParams(searchParams)
 		}
 
 
