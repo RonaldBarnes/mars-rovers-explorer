@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import useOnScreen from "../../hooks/useOnScreen";
 
 
 export default function Photo({ photo, rover })
 	{
 	// console.log(`Photo.js ${photo.img_src}`)
+	const figureRef = useRef();
+
+	const visible = useOnScreen( figureRef, {
+		root: null,
+		rootMargin: "0px 0px -20px 0px",
+		threshold: 0.5,
+		});
 
 	const [searchParams,setSearchParams] = useSearchParams();
 	// Save the selected / clicked / fullScreen photo (and if loading URL with
@@ -29,10 +37,19 @@ export default function Photo({ photo, rover })
 	photo id: ${photo.id}`;
 
 
+	useEffect( () => {
+		if (visible === true)
+			{
+			figureRef.current.classList.remove("offscreen");
+			figureRef.current.src = figureRef.current.dataset.src;
+			}
+		}, [visible]);
+
+
 	const handleClick = (e) =>
 		{
 		console.log(`handleClick: e: ${e.currentTarget}`)
-// console.table(e.currentTarget)
+
 		e.currentTarget.classList.toggle("fullScreen");
 		// Remove fullscreen styling from all photos:
 		const all = document.querySelectorAll(".fullScreen");
@@ -65,17 +82,26 @@ export default function Photo({ photo, rover })
 
 
 	return (
-		<div className="Photo">
-			<figure>
-			<img
-				alt={imageInfo}
-				src={photo.img_src}
-				title={imageInfo}
-				onClick={handleClick}
-				id={photo.id}
-				className={parseInt(fullScreen) === parseInt(photo.id)
-					? "fullScreen" : ""}
-				/>
+		<div className="Photo"
+			id={`div-${photo.id}`}
+			>
+			<figure
+					id={`fig-${photo.id}`}
+					// className="offscreen"
+					>
+				<img
+					alt={imageInfo}
+					ref={figureRef}
+					data-src={photo.img_src}
+					// src=""
+					title={imageInfo}
+					onClick={handleClick}
+					id={photo.id}
+					// This breaks image loading in bizarre ways, regardless if src= is specified:
+					// loading="lazy"
+					className={parseInt(fullScreen) === parseInt(photo.id)
+						? "" : "offscreen"}
+					/>
 			<figcaption>
 				{photo.earth_date} #{photo.id}<br />{cameraDisplayName}
 			</figcaption>
