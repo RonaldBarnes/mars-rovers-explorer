@@ -8,7 +8,7 @@ export default function useOnScreen(
 		)
 	{
 	// console.log(`%cuseOnScreen options: ${options} ref.current: ${ref.current}`, "color:lightblue");
-console.log(options);
+	// console.log(options);
 
 	const [isVisible, setIsVisible] = useState(false);
 
