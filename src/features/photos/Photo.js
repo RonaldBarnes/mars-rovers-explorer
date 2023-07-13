@@ -20,6 +20,10 @@ export default function Photo({ photo, rover })
 	const [fullScreen, setFullScreen] = useState(c =>
 		searchParams.get("photo_id")
 		);
+	// Off Screen is only for *initial* page load.
+	// When toggling fullScreen mode, should not return to offScreen:
+	const [classOffScreen,setClassOffScreen] = useState("offScreen");
+
 
 	// If we're on a /photos page, indicate camera name;
 	// if we're on a /rovers/rover_name/camera_name, then the camera is already known:
@@ -40,8 +44,15 @@ export default function Photo({ photo, rover })
 	useEffect( () => {
 		if (visible === true)
 			{
-			figureRef.current.classList.remove("offscreen");
+			// Off Screen is only for *initial* page load.
+			// When toggling fullScreen mode, should not return to offScreen:
+			figureRef.current.classList.remove("offScreen");
 			figureRef.current.src = figureRef.current.dataset.src;
+			setClassOffScreen("");
+			}
+		else
+			{
+			setClassOffScreen("offScreen");
 			}
 		}, [visible]);
 
@@ -73,7 +84,10 @@ export default function Photo({ photo, rover })
 			// (i.e. if clicking one image, then another, this removes the other's styling)
 			all.forEach(element => {
 				if (element !== e.currentTarget)
+					{
 					element.classList.remove("fullScreen");
+					}
+				// element.classList.remove("offscreen");
 				});
 			}
 
@@ -100,7 +114,7 @@ export default function Photo({ photo, rover })
 					// This breaks image loading in bizarre ways, regardless if src= is specified:
 					// loading="lazy"
 					className={parseInt(fullScreen) === parseInt(photo.id)
-						? "" : "offscreen"}
+						? "fullScreen" : classOffScreen}
 					/>
 			<figcaption>
 				{photo.earth_date} #{photo.id}<br />{cameraDisplayName}
