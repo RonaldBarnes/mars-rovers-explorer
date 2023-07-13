@@ -33,6 +33,7 @@ div.Photo figure
 
 figcaption
 	{
+	width: 100%;
 	text-align: center;
 	}
 
@@ -59,9 +60,9 @@ figcaption
 	transition: all 1.0s cubic-bezier(0.175, 0.885, 0, 1);
 	}
 
-.offscreen
+.offScreen
 	{
-	transform: translateX(-1000vw);
+	transform: translateX(-100vw);
 	opacity: 0;
 	transition: all 2s ease-in-out;
 	}
