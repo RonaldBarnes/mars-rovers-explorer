@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 
 export default function useOnScreen(
@@ -13,7 +13,9 @@ export default function useOnScreen(
 	const [isVisible, setIsVisible] = useState(false);
 
 	// When visible:
-	useEffect( () => {
+	// NB: useEffect caused "errors" where .unobserve claimed entry was not an object:
+	// "IntersectionObserver.unobserve: Argument 1 is not an object."
+	useLayoutEffect( () => {
 		if (ref.current == null) return;
 
 		const observer = new IntersectionObserver( ([entry]) => {
