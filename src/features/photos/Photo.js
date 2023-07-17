@@ -46,8 +46,8 @@ export default function Photo({ photo, rover })
 			{
 			// Off Screen is only for *initial* page load.
 			// When toggling fullScreen mode, should not return to offScreen:
-			figureRef.current.classList.remove("offScreen");
-			figureRef.current.src = figureRef.current.dataset.src;
+			figureRef.current.firstChild.classList.remove("offScreen");
+			figureRef.current.firstChild.src = figureRef.current.firstChild.dataset.src;
 			setClassOffScreen("");
 			}
 		else
@@ -102,10 +102,10 @@ export default function Photo({ photo, rover })
 			<figure
 					id={`fig-${photo.id}`}
 					// className="offscreen"
+					ref={figureRef}
 					>
 				<img
 					alt={imageInfo}
-					ref={figureRef}
 					data-src={photo.img_src}
 					// src=""
 					title={imageInfo}
