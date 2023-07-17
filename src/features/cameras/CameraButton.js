@@ -44,7 +44,8 @@ export default function CameraButton({
 		if (e.currentTarget.textContent === "Hide Photos")
 			{
 			e.currentTarget.textContent = full_name
-			document.getElementById(e.currentTarget.id).classList.remove("selected");
+			// document.getElementById(e.currentTarget.id).classList.remove("selected");
+			e.currentTarget.classList.remove("selected");
 			setCameraName( n => "");
 			// toggleCamera("");
 			navigate(`/rovers/${rover_name}`, {replace:false})
@@ -52,7 +53,8 @@ export default function CameraButton({
 		else
 			{
  			e.currentTarget.textContent = "Hide Photos"
-			document.getElementById(e.currentTarget.id).classList.add("selected");
+			// document.getElementById(e.currentTarget.id).classList.add("selected");
+			e.currentTarget.classList.add("selected");
 			// GIVES ERROR: e not passed up to RoverCard for set state?!?
 			// setCameraName(cn => e.currentTarget.value);
 			// work-around: intermediate variable, "boo!"
