@@ -28,6 +28,20 @@ Explore the Red Planet through the photos taken by NASA rovers, Curiosity, Oppor
 Pull requests with constructive feedback welcomed
 
 
+### Easter Eggs
+
+"Two Worlds. One Beginning."
+
+http://bclug.ca:3005/rovers/perseverance/MCZ_LEFT?earth_date=2023-07-07&page=3&photo_id=1159506
+
+
+Waving Astronaught with Lego?
+
+http://bclug.ca:3005/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397276
+
+
+
+
 
 #### Resources
 
