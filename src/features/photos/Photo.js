@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import useOnScreen from "../../hooks/useOnScreen";
+import useOnScreen, { useOnScreenIntersectionRatio } from "../../hooks/useOnScreen";
 
 
 export default function Photo({ photo, rover })
@@ -10,9 +10,17 @@ export default function Photo({ photo, rover })
 
 	const visible = useOnScreen( figureRef, {
 		root: null,
-		rootMargin: "0px 0px -20px 0px",
+		rootMargin: "0px 0px 0px 0px",
 		threshold: 0.5,
 		});
+	const halfVisible = useOnScreenIntersectionRatio( figureRef, {
+		root: null,
+		rootMargin: "0px 0px 0px 0px",
+		// threshold: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9],
+		threshold: [0.1,0.2,0.3,0.4,0.5],
+		});
+
+	const [wasVisible,setWasVisible] = useState(false);
 
 	const [searchParams,setSearchParams] = useSearchParams();
 	// Save the selected / clicked / fullScreen photo (and if loading URL with
@@ -48,13 +56,21 @@ export default function Photo({ photo, rover })
 			// When toggling fullScreen mode, should not return to offScreen:
 			figureRef.current.firstChild.classList.remove("offScreen");
 			figureRef.current.firstChild.src = figureRef.current.firstChild.dataset.src;
-			setClassOffScreen("");
-			}
-		else
-			{
-			setClassOffScreen("offScreen");
+			setClassOffScreen(c => "");
+			setWasVisible(c => true);
 			}
 		}, [visible]);
+
+
+
+	// When going from visible to almost off-screen again, re-apply offScreen class:
+	useEffect( () => {
+		if (visible === false && wasVisible === true && halfVisible < 0.75)
+			{
+			setClassOffScreen(c => "offScreen");
+			figureRef.current.firstChild.classList.add("offScreen");
+			}
+		}, [visible, halfVisible, wasVisible]);
 
 
 	const handleClick = (e) =>
