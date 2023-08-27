@@ -1,5 +1,5 @@
 - [x] Handle styling of "fullScreen" (clicked upon) photos
 - [x] Add IntersectionObserver to photos for lazy loading
-- [ ] Remove horizontal scrolling (mobile)
+- [x] Remove horizontal scrolling (mobile) (temp fix: initial-scale=0.75)
 - [ ] NavBar:active About needs rounded bottom left corner
 - [ ] NavBar:active Photos needs rounded bottom right corner
