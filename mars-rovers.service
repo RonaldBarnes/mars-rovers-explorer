@@ -1,0 +1,18 @@
+[Unit]
+Description=React.js Mars Rovers
+
+After=network.target
+
+[Service]
+User=uid1
+Type=simple
+
+Environment=PORT=3005
+ExecStart=/snap/bin/node node_modules/react-scripts/scripts/start.js
+WorkingDirectory=/home/uid1/Projects/react/mars-rovers/
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
