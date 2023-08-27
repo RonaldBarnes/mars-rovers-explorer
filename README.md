@@ -40,7 +40,9 @@ Waving Astronaught with Lego?
 http://bclug.ca:3005/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397276
 
 
+Touching Memorial
 
+http://bclug.ca:3005/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397261
 
 
 #### Resources
