@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import NavBar from "./NavBar";
 import About from "./About";
@@ -11,7 +11,11 @@ export default function MyRoutes() {
 		<>
 			<NavBar />
 			<Routes>
-				<Route exact path="/" element={<RoverList />} />
+				<Route exact path="/"
+					// element={<RoverList />}
+					// This will show all rovers at URL of "/rovers" instead of "/":
+					element={<DefaultPage />}
+					/>
 
 				<Route path="/rovers" element={<RoverList />}>
 					{ /* Nested routes: optional camera_id:. */ }
@@ -38,3 +42,14 @@ export default function MyRoutes() {
 		</>
 		);	// end return
 	};	// end Routes
+
+
+
+// A default page should be "/rovers", NOT <RoverList /> at "/", since
+// clicking on a rover at that URL will miss the "/rovers" prefix in URL:
+function DefaultPage()
+	{
+	const navigate = useNavigate();
+
+	navigate("/rovers")
+	}
