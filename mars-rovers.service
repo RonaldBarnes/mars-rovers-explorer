@@ -7,7 +7,7 @@ After=network.target
 User=uid1
 Type=simple
 
-Environment=PORT=3005
+Environment=PORT=3002
 ExecStart=/snap/bin/node node_modules/react-scripts/scripts/start.js
 WorkingDirectory=/home/uid1/Projects/react/mars-rovers/
 
