@@ -3,7 +3,7 @@
 Explore the Red Planet through the photos taken by NASA rovers, Curiosity, Opportunity, Spirit and Perseverance[^1].
 
 ## Live Site
-[Live, interactive site.](http://bclug.ca:3005)
+[Live, interactive site.](http://bclug.ca:3002)
 
 ## Usage
 
@@ -32,17 +32,17 @@ Pull requests with constructive feedback welcomed
 
 "Two Worlds. One Beginning."
 
-http://bclug.ca:3005/rovers/perseverance/MCZ_LEFT?earth_date=2023-07-07&page=3&photo_id=1159506
+http://bclug.ca:3002/rovers/perseverance/MCZ_LEFT?earth_date=2023-07-07&page=3&photo_id=1159506
 
 
 Waving Astronaught with Lego?
 
-http://bclug.ca:3005/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397276
+http://bclug.ca:3002/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397276
 
 
 Touching Memorial
 
-http://bclug.ca:3005/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397261
+http://bclug.ca:3002/rovers/spirit/PANCAM?earth_date=2004-01-06&page=1&photo_id=397261
 
 
 #### Resources
